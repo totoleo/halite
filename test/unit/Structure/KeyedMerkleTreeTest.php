@@ -74,7 +74,7 @@ class KeyedMerkleTreeTest extends PHPUnit_Framework_TestCase
             new Node('e'),
             new Node('e')
         );
-        $treeD->setKeyIsHashOfSize(true);
+        $treeD->setAddSize(true);
 
         $this->assertNotEquals(
             $treeA->getRoot(),

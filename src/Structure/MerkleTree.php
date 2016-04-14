@@ -6,7 +6,6 @@ use \ParagonIE\Halite\Alerts\InvalidKey;
 use \ParagonIE\Halite\Key;
 use \ParagonIE\Halite\Symmetric\AuthenticationKey;
 use \ParagonIE\Halite\Asymmetric\SignaturePublicKey;
-use ParagonIE\Halite\Util;
 
 /**
  * An implementation of a Merkle hash tree, built on the BLAKE2b hash function
@@ -17,7 +16,7 @@ class MerkleTree
     const MERKLE_LEAF =   "\x01";
     const MERKLE_BRANCH = "\x00";
 
-    private $keyIsHashOfSize = false;
+    private $addSize = false;
     private $key = '';
     private $root = '';
     private $nodes = [];
@@ -58,12 +57,12 @@ class MerkleTree
         foreach ($nodes as $node) {
             $thisTree []= $node;
         }
-        if ($this->keyIsHashOfSize) {
-            return (new MerkleTree(...$thisTree))
-                ->setKeyIsHashOfSize(true);
-        }
-        return (new MerkleTree(...$thisTree))
+        $mk = (new MerkleTree(...$thisTree))
             ->setKeyFromString($this->key);
+        if ($this->addSize) {
+            $mk->setAddSize(true);
+        }
+        return $mk;
     }
 
     /**
@@ -128,19 +127,9 @@ class MerkleTree
      * @param bool $useSizeForKey
      * @return MerkleTree
      */
-    public function setKeyIsHashOfSize(bool $useSizeForKey = true): self
+    public function setAddSize(bool $useSizeForKey = true): self
     {
-        $this->keyIsHashOfSize = $useSizeForKey;
-        if ($useSizeForKey) {
-            $this->keyIsHashOfSize = true;
-            $this->key = Util::raw_hash('' . $this->getNodeCount());
-            $this->root = $this->calculateRoot();
-            return $this;
-        }
-        $nodeCountKey = Util::raw_hash('' . $this->getNodeCount());
-        if (\hash_equals($this->key, $nodeCountKey)) {
-            $this->key = '';
-        }
+        $this->addSize = $useSizeForKey;
         $this->root = $this->calculateRoot();
         return $this;
     }
@@ -168,6 +157,9 @@ class MerkleTree
                 $debug[$i] = \Sodium\bin2hex($hash[$i]);
             }
         }
+        $prefix = $this->addSize
+            ? '' . $this->getNodeCount()
+            : '';
         // Calculation (Use self::MERKLE_BRANCH as a prefix)
         do {
             $tmp = [];
@@ -175,12 +167,12 @@ class MerkleTree
             for ($i = 0; $i < $order; $i += 2) {
                 if (empty($hash[$i + 1])) {
                     $tmp[$j] = \Sodium\crypto_generichash(
-                        self::MERKLE_BRANCH . $hash[$i] . $hash[$i],
+                        self::MERKLE_BRANCH . $prefix . $hash[$i] . $hash[$i],
                         $this->key
                     );
                 } else {
                     $tmp[$j] = \Sodium\crypto_generichash(
-                        self::MERKLE_BRANCH . $hash[$i] . $hash[$i + 1],
+                        self::MERKLE_BRANCH . $prefix . $hash[$i] . $hash[$i + 1],
                         $this->key
                     );
                 }
