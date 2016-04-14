@@ -1,7 +1,7 @@
 <?php
 
 use \ParagonIE\Halite\Structure\{
-    KeyedMerkleTree,
+    MerkleTree,
     Node
 };
 
@@ -13,7 +13,7 @@ class KeyedMerkleTreeTest extends PHPUnit_Framework_TestCase
 {
     public function testExpectedBehavior()
     {
-        $treeA = new KeyedMerkleTree(
+        $treeA = new MerkleTree(
             new Node('a'),
             new Node('b'),
             new Node('c'),
@@ -38,7 +38,7 @@ class KeyedMerkleTreeTest extends PHPUnit_Framework_TestCase
             $treeA->getRoot()
         );
 
-        $treeB = new KeyedMerkleTree(
+        $treeB = new MerkleTree(
             new Node('a'),
             new Node('b'),
             new Node('c'),

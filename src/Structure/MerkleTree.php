@@ -2,6 +2,11 @@
 declare(strict_types=1);
 namespace ParagonIE\Halite\Structure;
 
+use \ParagonIE\Halite\Alerts\InvalidKey;
+use \ParagonIE\Halite\Key;
+use \ParagonIE\Halite\Symmetric\AuthenticationKey;
+use \ParagonIE\Halite\Asymmetric\SignaturePublicKey;
+
 /**
  * An implementation of a Merkle hash tree, built on the BLAKE2b hash function
  * (provided by libsodium)
@@ -11,8 +16,9 @@ class MerkleTree
     const MERKLE_LEAF =   "\x01";
     const MERKLE_BRANCH = "\x00";
 
-    protected $root = '';
-    protected $nodes = [];
+    private $key = '';
+    private $root = '';
+    private $nodes = [];
     
     /**
      * Instantiate a Merkle tree
@@ -50,7 +56,8 @@ class MerkleTree
         foreach ($nodes as $node) {
             $thisTree []= $node;
         }
-        return new MerkleTree(...$thisTree);
+        return (new MerkleTree(...$thisTree))
+            ->setKeyFromString($this->key);
     }
 
     /**
@@ -77,7 +84,37 @@ class MerkleTree
         }
         return $order;
     }
+    /**
+     * Set the key for calculating this Merkle root
+     *
+     * @param string $key
+     * @return self
+     */
+    public function setKeyFromString(string $key)
+    {
+        $this->key = $key;
+        $this->root = $this->calculateRoot();
+        return $this;
+    }
 
+    /**
+     * Set the key for calculating this Merkle root
+     *
+     * @param Key $key AuthenticationKey|SignaturePublicKey
+     *
+     * @throws InvalidKey
+     * @return self
+     */
+    public function setKey(Key $key)
+    {
+        if ($key instanceof AuthenticationKey || $key instanceof SignaturePublicKey) {
+            $this->key = $key->getRawKeyMaterial();
+        } else {
+            throw new InvalidKey('KeyedMerkleTree expects an AuthenticationKey or a SignaturePublicKey.');
+        }
+        $this->root = $this->calculateRoot();
+        return $this;
+    }
     /**
      * Calculate the Merkle root, taking care to distinguish between
      * leaves and branches (0x01 for the nodes, 0x00 for the branches)
@@ -108,11 +145,13 @@ class MerkleTree
             for ($i = 0; $i < $order; $i += 2) {
                 if (empty($hash[$i + 1])) {
                     $tmp[$j] = \Sodium\crypto_generichash(
-                        self::MERKLE_BRANCH . $hash[$i] . $hash[$i]
+                        self::MERKLE_BRANCH . $hash[$i] . $hash[$i],
+                        $this->key
                     );
                 } else {
                     $tmp[$j] = \Sodium\crypto_generichash(
-                        self::MERKLE_BRANCH . $hash[$i] . $hash[$i + 1]
+                        self::MERKLE_BRANCH . $hash[$i] . $hash[$i + 1],
+                        $this->key
                     );
                 }
                 ++$j;
