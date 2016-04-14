@@ -1,6 +1,12 @@
+# Don't use this branch.
+
+It was a proof-of-concept for an idea I was discussing. Use master instead.
+
+-----
+
 # Halite
 
-[![Build Status](https://travis-ci.org/paragonie/halite.svg?branch=master)](https://travis-ci.org/paragonie/halite)
+[![Build Status](https://travis-ci.org/paragonie/halite.svg?branch=mad-science)](https://travis-ci.org/paragonie/halite)
 
 Halite is a high-level cryptography interface that relies on [libsodium](https://pecl.php.net/package/libsodium)
 for all of its underlying cryptography operations.
