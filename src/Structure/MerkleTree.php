@@ -6,6 +6,7 @@ use \ParagonIE\Halite\Alerts\InvalidKey;
 use \ParagonIE\Halite\Key;
 use \ParagonIE\Halite\Symmetric\AuthenticationKey;
 use \ParagonIE\Halite\Asymmetric\SignaturePublicKey;
+use ParagonIE\Halite\Util;
 
 /**
  * An implementation of a Merkle hash tree, built on the BLAKE2b hash function
@@ -16,6 +17,7 @@ class MerkleTree
     const MERKLE_LEAF =   "\x01";
     const MERKLE_BRANCH = "\x00";
 
+    private $keyIsHashOfSize = false;
     private $key = '';
     private $root = '';
     private $nodes = [];
@@ -55,6 +57,10 @@ class MerkleTree
         $thisTree = $this->nodes;
         foreach ($nodes as $node) {
             $thisTree []= $node;
+        }
+        if ($this->keyIsHashOfSize) {
+            return (new MerkleTree(...$thisTree))
+                ->setKeyIsHashOfSize(true);
         }
         return (new MerkleTree(...$thisTree))
             ->setKeyFromString($this->key);
@@ -115,6 +121,30 @@ class MerkleTree
         $this->root = $this->calculateRoot();
         return $this;
     }
+
+    /**
+     * The key for the hash function should be set to BLAKE2b(size of tree)
+     *
+     * @param bool $useSizeForKey
+     * @return MerkleTree
+     */
+    public function setKeyIsHashOfSize(bool $useSizeForKey = true): self
+    {
+        $this->keyIsHashOfSize = $useSizeForKey;
+        if ($useSizeForKey) {
+            $this->keyIsHashOfSize = true;
+            $this->key = Util::raw_hash('' . $this->getNodeCount());
+            $this->root = $this->calculateRoot();
+            return $this;
+        }
+        $nodeCountKey = Util::raw_hash('' . $this->getNodeCount());
+        if (\hash_equals($this->key, $nodeCountKey)) {
+            $this->key = '';
+        }
+        $this->root = $this->calculateRoot();
+        return $this;
+    }
+
     /**
      * Calculate the Merkle root, taking care to distinguish between
      * leaves and branches (0x01 for the nodes, 0x00 for the branches)
