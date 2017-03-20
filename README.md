@@ -52,11 +52,11 @@ The last step required to use Halite is to install it using Composer.
 
 For the latest version of Halite:
 
-    composer require paragonie/halite
+    composer require guazi/halite
 
 Or for older versions of Halite, specify the version number:
 
-    composer require paragonie/halite:^v1
+    composer require guazi/halite:^v1
 
 ## Using Halite in Your Project
 
