@@ -12,14 +12,12 @@ abstract class Crypto implements Contract\AsymmetricKeyCryptoInterface
     /**
      * Encrypt a string using asymmetric cryptography
      * Wraps SymmetricCrypto::encrypt()
-     * 
-     * @param string $source Plaintext
-     * @param EncryptionSecretKey $ourPrivateKey Our private key
-     * @param EncryptionPublicKey $theirPublicKey  Their public key
-     * @param boolean $raw Don't hex encode the output?
-     * 
+     *
+     * @param string                                    $source Plaintext
+     * @param EncryptionSecretKey|Contract\KeyInterface $ourPrivateKey Our private key
+     * @param EncryptionPublicKey|Contract\KeyInterface $theirPublicKey Their public key
+     * @param boolean                                   $raw Don't hex encode the output?
      * @return string
-     * 
      * @throws CryptoException\InvalidKey
      * @throws CryptoException\InvalidType
      */
@@ -94,19 +92,17 @@ abstract class Crypto implements Contract\AsymmetricKeyCryptoInterface
         unset($ecdh);
         return $ciphertext;
     }
-    
+
     /**
      * Diffie-Hellman, ECDHE, etc.
-     * 
+     *
      * Get a shared secret from a private key you possess and a public key for
      * the intended message recipient
-     * 
-     * @param EncryptionSecretKey $privateKey
-     * @param EncryptionPublicKey $publicKey
-     * @param bool $get_as_object Get as a Key object?
-     * 
+     *
+     * @param EncryptionSecretKey|Contract\KeyInterface $privateKey
+     * @param EncryptionPublicKey|Contract\KeyInterface $publicKey
+     * @param bool                                      $get_as_object Get as a Key object?
      * @return string
-     * 
      * @throws CryptoException\InvalidKey
      */
     public static function getSharedSecret(
@@ -137,19 +133,17 @@ abstract class Crypto implements Contract\AsymmetricKeyCryptoInterface
             $publicKey->get()
         );
     }
-    
+
     /**
      * Encrypt a message with a target users' public key
-     * 
-     * @param string $source Message to encrypt
-     * @param EncryptionPublicKey $publicKey
-     * @param boolean $raw Don't hex encode the output?
-     * 
-     * @return string
      *
+     * @param string                                    $source Message to encrypt
+     * @param EncryptionPublicKey|Contract\KeyInterface $publicKey
+     * @param boolean                                   $raw Don't hex encode the output?
+     * @return string
+     * @throws CryptoException\CannotPerformOperation
      * @throws CryptoException\InvalidKey
      * @throws CryptoException\InvalidType
-     * @throws CryptoException\CannotPerformOperation
      */
     public static function seal(
         $source,
@@ -178,14 +172,13 @@ abstract class Crypto implements Contract\AsymmetricKeyCryptoInterface
         }
         return \Sodium\bin2hex($sealed);
     }
-    
+
     /**
      * Sign a message with our private key
-     * 
-     * @param string $message Message to sign
-     * @param SignatureSecretKey $privateKey
-     * @param boolean $raw Don't hex encode the output?
-     * 
+     *
+     * @param string                                   $message Message to sign
+     * @param SignatureSecretKey|Contract\KeyInterface $privateKey
+     * @param boolean                                  $raw Don't hex encode the output?
      * @return string Signature (detached)
      *
      * @throws CryptoException\InvalidKey
@@ -215,19 +208,17 @@ abstract class Crypto implements Contract\AsymmetricKeyCryptoInterface
         }
         return \Sodium\bin2hex($signed);
     }
-    
+
     /**
      * Decrypt a sealed message with our private key
-     * 
-     * @param string $source Encrypted message (string or resource for a file)
-     * @param EncryptionSecretKey $privateKey
-     * @param boolean $raw Don't hex decode the input?
-     * 
+     *
+     * @param string                                    $source Encrypted message (string or resource for a file)
+     * @param EncryptionSecretKey|Contract\KeyInterface $privateKey
+     * @param boolean                                   $raw Don't hex decode the input?
      * @return string
-     * 
+     * @throws CryptoException\CannotPerformOperation
      * @throws CryptoException\InvalidKey
      * @throws CryptoException\InvalidType
-     * @throws CryptoException\CannotPerformOperation
      */
     public static function unseal(
         $source,
@@ -279,21 +270,18 @@ abstract class Crypto implements Contract\AsymmetricKeyCryptoInterface
         // We have our encrypted message here
         return $message;
     }
-    
+
     /**
      * Verify a signed message with the correct public key
-     * 
-     * @param string $message Message to verify
-     * @param SignaturePublicKey $publicKey
-     * @param string $signature
-     * @param boolean $raw Don't hex decode the input?
-     * 
-     * @return boolean
      *
+     * @param string                                   $message Message to verify
+     * @param SignaturePublicKey|Contract\KeyInterface $publicKey
+     * @param string                                   $signature
+     * @param boolean                                  $raw Don't hex decode the input?
+     * @return bool
      * @throws CryptoException\InvalidKey
-     * @throws CryptoException\InvalidType
      * @throws CryptoException\InvalidSignature
-     * @throws CryptoException\CannotPerformOperation
+     * @throws CryptoException\InvalidType
      */
     public static function verify(
         $message,

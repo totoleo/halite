@@ -29,12 +29,13 @@ class Config
         }
         throw new CryptoException\ConfigDirectiveNotFound($key);
     }
-    
+
     /**
      * Setter (NOP)
-     * 
+     *
      * @param mixed $key
      * @param mixed $value
+     * @return bool
      */
     public function __set($key, $value = null)
     {

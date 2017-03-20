@@ -1,15 +1,12 @@
 <?php
 namespace ParagonIE\Halite;
 
-use \ParagonIE\Halite\Asymmetric\EncryptionPublicKey;
-use \ParagonIE\Halite\Asymmetric\EncryptionSecretKey;
-use \ParagonIE\Halite\Asymmetric\SignaturePublicKey;
-use \ParagonIE\Halite\Asymmetric\SignatureSecretKey;
-use \ParagonIE\Halite\Symmetric\AuthenticationKey;
-use \ParagonIE\Halite\Symmetric\EncryptionKey;
-use \ParagonIE\Halite\Halite;
-use \ParagonIE\Halite\Key;
-use \ParagonIE\Halite\KeyPair;
+use ParagonIE\Halite\Asymmetric\EncryptionPublicKey;
+use ParagonIE\Halite\Asymmetric\EncryptionSecretKey;
+use ParagonIE\Halite\Asymmetric\SignaturePublicKey;
+use ParagonIE\Halite\Asymmetric\SignatureSecretKey;
+use ParagonIE\Halite\Symmetric\AuthenticationKey;
+use ParagonIE\Halite\Symmetric\EncryptionKey;
 
 /**
  * Class for generating specific key types
@@ -66,10 +63,9 @@ abstract class KeyFactory
     /**
      * Generate a key pair for public key digital signatures
      *
-     * @param type $secret_key
      * @return \ParagonIE\Halite\SignatureKeyPair
      */
-    public static function generateSignatureKeyPair(&$secret_key = null)
+    public static function generateSignatureKeyPair()
     {
         // Encryption keypair
         $kp         = \Sodium\crypto_sign_keypair();
@@ -155,8 +151,9 @@ abstract class KeyFactory
     /**
      * Derive a key pair for public key signatures from a password and salt
      *
-     * @param type $secret_key
-     * @return \ParagonIE\Halite\SignatureKeyPair
+     * @param $password
+     * @param $salt
+     * @return SignatureKeyPair
      */
     public static function deriveSignatureKeyPair(
         $password,
@@ -185,6 +182,7 @@ abstract class KeyFactory
      *
      * @param string $filePath
      * @return AuthenticationKey
+     * @throws Alerts\CannotPerformOperation
      */
     public static function loadAuthenticationKey($filePath)
     {
@@ -203,6 +201,7 @@ abstract class KeyFactory
      *
      * @param string $filePath
      * @return EncryptionKey
+     * @throws Alerts\CannotPerformOperation
      */
     public static function loadEncryptionKey($filePath)
     {
@@ -221,6 +220,7 @@ abstract class KeyFactory
      *
      * @param string $filePath
      * @return EncryptionPublicKey
+     * @throws Alerts\CannotPerformOperation
      */
     public static function loadEncryptionPublicKey($filePath)
     {
@@ -239,6 +239,7 @@ abstract class KeyFactory
      *
      * @param string $filePath
      * @return EncryptionSecretKey
+     * @throws Alerts\CannotPerformOperation
      */
     public static function loadEncryptionSecretKey($filePath)
     {
@@ -257,6 +258,7 @@ abstract class KeyFactory
      *
      * @param string $filePath
      * @return SignaturePublicKey
+     * @throws Alerts\CannotPerformOperation
      */
     public static function loadSignaturePublicKey($filePath)
     {
@@ -275,6 +277,7 @@ abstract class KeyFactory
      *
      * @param string $filePath
      * @return SignatureSecretKey
+     * @throws Alerts\CannotPerformOperation
      */
     public static function loadSignatureSecretKey($filePath)
     {
@@ -293,6 +296,7 @@ abstract class KeyFactory
      *
      * @param string $filePath
      * @return EncryptionKeyPair
+     * @throws Alerts\CannotPerformOperation
      */
     public static function loadEncryptionKeyPair($filePath)
     {
@@ -314,6 +318,7 @@ abstract class KeyFactory
      *
      * @param string $filePath
      * @return SignatureKeyPair
+     * @throws Alerts\CannotPerformOperation
      */
     public static function loadSignatureKeyPair($filePath)
     {

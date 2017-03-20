@@ -1,6 +1,6 @@
 <?php
 namespace ParagonIE\Halite\Contract;
-
+use \ParagonIE\Halite\Alerts as CryptoException;
 /**
  * 
  */
@@ -11,7 +11,7 @@ interface StreamInterface
      * 
      * @param int $num
      * @return string
-     * @throws FileAlert\AccessDenied
+     * @throws CryptoException\FileAccessDenied
      */
     public function readBytes($num);
     
@@ -20,7 +20,7 @@ interface StreamInterface
      * 
      * @param string $buf
      * @param int $num (number of bytes)
-     * @throws FileAlert\AccessDenied
+     * @throws CryptoException\FileAccessDenied
      */
     public function writeBytes($buf, $num = null);
 }

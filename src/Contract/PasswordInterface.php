@@ -13,7 +13,7 @@ interface PasswordInterface
      * Hash then encrypt a password
      * 
      * @param string $password   - The user's password
-     * @param EncryptionKey $secret_key - The master key for all passwords
+     * @param KeyInterface $secret_key - The master key for all passwords
      * @return string
      */
     public static function hash($password, KeyInterface $secret_key);

@@ -12,10 +12,10 @@ abstract class Crypto implements Contract\SymmetricKeyCryptoInterface
 {
     /**
      * Authenticate a string
-     * 
-     * @param string $message
-     * @param AuthenticationKey $secretKey
-     * @param boolean $raw
+     *
+     * @param string                                  $message
+     * @param Contract\KeyInterface|AuthenticationKey $secretKey
+     * @param boolean                                 $raw
      * @return string
      * @throws CryptoException\InvalidKey
      * @throws CryptoException\InvalidType
@@ -35,8 +35,7 @@ abstract class Crypto implements Contract\SymmetricKeyCryptoInterface
                 'Argument 2: Expected an instnace of AuthenticationKey'
             );
         }
-        $config = SymmetricConfig::getConfig(Halite::HALITE_VERSION, 'auth');
-        $mac = self::calculateMAC($message, $secretKey->get(), $config);
+        $mac = self::calculateMAC($message, $secretKey->get());
         if ($raw) {
             return $mac;
         }

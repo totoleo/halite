@@ -1,19 +1,19 @@
 <?php
-declare(strict_types=1);
+declare(strict_types = 1);
 namespace Sodium;
 
 /**
  * To silence the phpstorm "unknown namespace" errors.
  *
  * This does nothing if the libsodium extension is loaded, so it's harmless.
- * 
+ *
  * This file alone is released under CC0 and WTFPL dual licensing.
  */
 if (!\extension_loaded('libsodium')) {
     /**
      * Can you access AES-256-GCM? This is only available if you have supported
      * hardware.
-     * 
+     *
      * @return bool
      */
     function crypto_aead_aes256gcm_is_available()
@@ -24,7 +24,7 @@ if (!\extension_loaded('libsodium')) {
     /**
      * Authenticated Encryption with Associated Data (decrypt)
      * AES-256-GCM
-     * 
+     *
      * @param string $msg encrypted message
      * @param string $nonce
      * @param string $key
@@ -43,7 +43,7 @@ if (!\extension_loaded('libsodium')) {
     /**
      * Authenticated Encryption with Associated Data (encrypt)
      * AES-256-GCM
-     * 
+     *
      * @param string $msg plaintext message
      * @param string $nonce
      * @param string $key
@@ -62,7 +62,7 @@ if (!\extension_loaded('libsodium')) {
     /**
      * Authenticated Encryption with Associated Data (decrypt)
      * ChaCha20 + Poly1305
-     * 
+     *
      * @param string $msg encrypted message
      * @param string $nonce
      * @param string $key
@@ -81,7 +81,7 @@ if (!\extension_loaded('libsodium')) {
     /**
      * Authenticated Encryption with Associated Data (encrypt)
      * ChaCha20 + Poly1305
-     * 
+     *
      * @param string $msg plaintext message
      * @param string $nonce
      * @param string $key
@@ -100,7 +100,7 @@ if (!\extension_loaded('libsodium')) {
     /**
      * Secret-key message authentication
      * HMAC SHA-512/256
-     * 
+     *
      * @param string $msg
      * @param string $key
      * @return string
@@ -115,7 +115,7 @@ if (!\extension_loaded('libsodium')) {
     /**
      * Secret-key message verification
      * HMAC SHA-512/256
-     * 
+     *
      * @param string $mac
      * @param string $msg
      * @param string $key
@@ -132,7 +132,7 @@ if (!\extension_loaded('libsodium')) {
     /**
      * Public-key authenticated encryption (encrypt)
      * X25519 + Xsalsa20 + Poly1305
-     * 
+     *
      * @param string $msg
      * @param string $nonce
      * @param string $keypair
@@ -148,16 +148,17 @@ if (!\extension_loaded('libsodium')) {
 
     /**
      * Generate an X25519 keypair for use with the crypto_box API
-     * 
+     *
      * @return string
      */
-    function crypto_box_keypair() {
+    function crypto_box_keypair()
+    {
         return '';
     }
 
     /**
      * Derive an X25519 keypair for use with the crypto_box API from a seed
-     * 
+     *
      * @param string $seed
      * @return string
      */
@@ -169,7 +170,7 @@ if (!\extension_loaded('libsodium')) {
 
     /**
      * Create an X25519 keypair from an X25519 secret key and X25519 public key
-     * 
+     *
      * @param string $secretkey
      * @param string $publickey
      * @return string
@@ -184,7 +185,7 @@ if (!\extension_loaded('libsodium')) {
     /**
      * Public-key authenticated encryption (decrypt)
      * X25519 + Xsalsa20 + Poly1305
-     * 
+     *
      * @param string $msg
      * @param string $nonce
      * @param string $keypair
@@ -200,7 +201,7 @@ if (!\extension_loaded('libsodium')) {
 
     /**
      * Get an X25519 public key from an X25519 keypair
-     * 
+     *
      * @param string $keypair
      * @return string
      */
@@ -212,7 +213,7 @@ if (!\extension_loaded('libsodium')) {
 
     /**
      * Derive an X25519 public key from an X25519 secret key
-     * 
+     *
      * @param string $secretkey
      * @return string
      */
@@ -225,7 +226,7 @@ if (!\extension_loaded('libsodium')) {
     /**
      * Anonymous public-key encryption (encrypt)
      * X25519 + Xsalsa20 + Poly1305 + BLAKE2b
-     * 
+     *
      * @param string $message
      * @param string $publickey
      */
@@ -235,11 +236,11 @@ if (!\extension_loaded('libsodium')) {
     ) {
         return '';
     }
-    
+
     /**
      * Anonymous public-key encryption (decrypt)
      * X25519 + Xsalsa20 + Poly1305 + BLAKE2b
-     * 
+     *
      * @param string $encrypted
      * @param string $keypair
      */
@@ -249,10 +250,10 @@ if (!\extension_loaded('libsodium')) {
     ) {
         return '';
     }
-    
+
     /**
      * Extract the X25519 secret key from an X25519 keypair
-     * 
+     *
      * @param string $keypair
      * @return string
      */
@@ -264,7 +265,7 @@ if (!\extension_loaded('libsodium')) {
     /**
      * Elliptic Curve Diffie Hellman Key Exchange
      * X25519
-     * 
+     *
      * @param string $secretkey
      * @param string $publickey
      * @param string $client_publickey
@@ -279,29 +280,29 @@ if (!\extension_loaded('libsodium')) {
     ) {
         return '';
     }
-    
+
     /**
      * Fast and secure cryptographic hash
-     * 
+     *
      * @param string $input
      * @param string $key
-     * @param int $length
+     * @param int    $length
      * @return string
      */
     function crypto_generichash(
         $input,
         $key = '',
         $length = 32
-    ){
+    ) {
         return '';
     }
 
     /**
      * Create a new hash state (e.g. to use for streams)
      * BLAKE2b
-     * 
+     *
      * @param string $key
-     * @param int $length
+     * @param int    $length
      * @return string
      */
     function crypto_generichash_init(
@@ -314,7 +315,7 @@ if (!\extension_loaded('libsodium')) {
     /**
      * Update the hash state with some data
      * BLAKE2b
-     * 
+     *
      * @param &string $hashState
      * @param string $append
      * @return bool
@@ -329,9 +330,9 @@ if (!\extension_loaded('libsodium')) {
     /**
      * Get the final hash
      * BLAKE2b
-     * 
+     *
      * @param string $hashState
-     * @param int $length
+     * @param int    $length
      * @return string
      */
     function crypto_generichash_final(
@@ -344,12 +345,12 @@ if (!\extension_loaded('libsodium')) {
     /**
      * Secure password-based key derivation function
      * Argon2i
-     * 
-     * @param int $out_len
+     *
+     * @param int    $out_len
      * @param string $passwd
      * @param string $salt
-     * @param int $opslimit
-     * @param int $memlimit
+     * @param int    $opslimit
+     * @param int    $memlimit
      * @return $string
      */
     function crypto_pwhash(
@@ -365,10 +366,10 @@ if (!\extension_loaded('libsodium')) {
     /**
      * Get a formatted password hash (for storage)
      * Argon2i
-     * 
+     *
      * @param string $passwd
-     * @param int $opslimit
-     * @param int $memlimit
+     * @param int    $opslimit
+     * @param int    $memlimit
      * @return $string
      */
     function crypto_pwhash_str(
@@ -382,7 +383,7 @@ if (!\extension_loaded('libsodium')) {
     /**
      * Verify a password against a hash
      * Argon2i
-     * 
+     *
      * @param string $hash
      * @param string $passwd
      * @return bool
@@ -397,12 +398,12 @@ if (!\extension_loaded('libsodium')) {
     /**
      * Secure password-based key derivation function
      * Scrypt
-     * 
-     * @param int $out_len
+     *
+     * @param int    $out_len
      * @param string $passwd
      * @param string $salt
-     * @param int $opslimit
-     * @param int $memlimit
+     * @param int    $opslimit
+     * @param int    $memlimit
      * @return $string
      */
     function crypto_pwhash_scryptsalsa208sha256(
@@ -418,10 +419,10 @@ if (!\extension_loaded('libsodium')) {
     /**
      * Get a formatted password hash (for storage)
      * Scrypt
-     * 
+     *
      * @param string $passwd
-     * @param int $opslimit
-     * @param int $memlimit
+     * @param int    $opslimit
+     * @param int    $memlimit
      * @return $string
      */
     function crypto_pwhash_scryptsalsa208sha256_str(
@@ -435,7 +436,7 @@ if (!\extension_loaded('libsodium')) {
     /**
      * Verify a password against a hash
      * Scrypt
-     * 
+     *
      * @param string $hash
      * @param string $passwd
      * @return bool
@@ -450,7 +451,7 @@ if (!\extension_loaded('libsodium')) {
     /**
      * Elliptic Curve Diffie Hellman over Curve25519
      * X25519
-     * 
+     *
      * @param string $ecdhA
      * @param string $ecdhB
      * @return string
@@ -465,7 +466,7 @@ if (!\extension_loaded('libsodium')) {
     /**
      * Authenticated secret-key encryption (encrypt)
      * Xsals20 + Poly1305
-     * 
+     *
      * @param string $plaintext
      * @param string $nonce
      * @param string $key
@@ -482,7 +483,7 @@ if (!\extension_loaded('libsodium')) {
     /**
      * Authenticated secret-key encryption (decrypt)
      * Xsals20 + Poly1305
-     * 
+     *
      * @param string $ciphertext
      * @param string $nonce
      * @param string $key
@@ -499,7 +500,7 @@ if (!\extension_loaded('libsodium')) {
     /**
      * A short keyed hash suitable for data structures
      * SipHash-2-4
-     * 
+     *
      * @param string $message
      * @param string $key
      * @return string
@@ -514,7 +515,7 @@ if (!\extension_loaded('libsodium')) {
     /**
      * Digital Signature
      * Ed25519
-     * 
+     *
      * @param string $message
      * @param string $secretkey
      * @return string
@@ -529,7 +530,7 @@ if (!\extension_loaded('libsodium')) {
     /**
      * Digital Signature (detached)
      * Ed25519
-     * 
+     *
      * @param string $message
      * @param string $secretkey
      * @return string
@@ -543,7 +544,7 @@ if (!\extension_loaded('libsodium')) {
 
     /**
      * Convert an Ed25519 public key to an X25519 public key
-     * 
+     *
      * @param string $sign_pk
      * @return string
      */
@@ -555,7 +556,7 @@ if (!\extension_loaded('libsodium')) {
 
     /**
      * Convert an Ed25519 secret key to an X25519 secret key
-     * 
+     *
      * @param string $sign_sk
      * @return string
      */
@@ -567,7 +568,7 @@ if (!\extension_loaded('libsodium')) {
 
     /**
      * Generate an Ed25519 keypair for use with the crypto_sign API
-     * 
+     *
      * @return string
      */
     function crypto_sign_keypair()
@@ -575,10 +576,9 @@ if (!\extension_loaded('libsodium')) {
         return '';
     }
 
-
     /**
      * Create an Ed25519 keypair from an Ed25519 secret key + Ed25519 public key
-     * 
+     *
      * @param string $secretkey
      * @param string $publickey
      * @return string
@@ -592,7 +592,7 @@ if (!\extension_loaded('libsodium')) {
 
     /**
      * Verify a signed message and return the plaintext
-     * 
+     *
      * @param string $signed_message
      * @param string $publickey
      * @return string
@@ -606,7 +606,7 @@ if (!\extension_loaded('libsodium')) {
 
     /**
      * Get the public key from an Ed25519 keypair
-     * 
+     *
      * @param string $keypair
      */
     function crypto_sign_publickey(
@@ -617,7 +617,7 @@ if (!\extension_loaded('libsodium')) {
 
     /**
      * Get the secret key from an Ed25519 keypair
-     * 
+     *
      * @param string $keypair
      */
     function crypto_sign_secretkey(
@@ -628,7 +628,7 @@ if (!\extension_loaded('libsodium')) {
 
     /**
      * Derive an Ed25519 public key from an Ed25519 secret key
-     * 
+     *
      * @param string $secretkey
      * @return string
      */
@@ -640,7 +640,7 @@ if (!\extension_loaded('libsodium')) {
 
     /**
      * Derive an Ed25519 keypair for use with the crypto_sign API from a seed
-     * 
+     *
      * @param string $seed
      * @return string
      */
@@ -652,7 +652,7 @@ if (!\extension_loaded('libsodium')) {
 
     /**
      * Verify a detached signature
-     * 
+     *
      * @param string $signature
      * @param string $msg
      * @param string $publickey
@@ -669,8 +669,8 @@ if (!\extension_loaded('libsodium')) {
     /**
      * Create a keystream from a key and nonce
      * Xsalsa20
-     * 
-     * @param int $length
+     *
+     * @param int    $length
      * @param string $nonce
      * @param string $key
      * @return string
@@ -686,7 +686,7 @@ if (!\extension_loaded('libsodium')) {
     /**
      * Encrypt a message using a stream cipher
      * Xsalsa20
-     * 
+     *
      * @param string $plaintext
      * @param string $nonce
      * @param string $key
@@ -703,7 +703,7 @@ if (!\extension_loaded('libsodium')) {
     /**
      * Generate a string of random bytes
      * /dev/urandom
-     * 
+     *
      * @param int $length
      * @return string
      */
@@ -716,17 +716,18 @@ if (!\extension_loaded('libsodium')) {
     /**
      * Generate a 16-bit integer
      * /dev/urandom
-     * 
+     *
      * @return int
      */
-    function randombytes_random16() {
+    function randombytes_random16()
+    {
         return '';
     }
 
     /**
      * Generate an unbiased random integer between 0 and a specified value
      * /dev/urandom
-     * 
+     *
      * @param int $upperBoundNonInclusive
      * @return int
      */
@@ -738,7 +739,7 @@ if (!\extension_loaded('libsodium')) {
 
     /**
      * Convert to hex without side-chanels
-     * 
+     *
      * @param string $binary
      * @return string
      */
@@ -750,7 +751,7 @@ if (!\extension_loaded('libsodium')) {
 
     /**
      * Compare two strings in constant time
-     * 
+     *
      * @param string $left
      * @param string $right
      * @return int
@@ -764,7 +765,7 @@ if (!\extension_loaded('libsodium')) {
 
     /**
      * Convert from hex without side-chanels
-     * 
+     *
      * @param string $binary
      * @return string
      */
@@ -773,10 +774,10 @@ if (!\extension_loaded('libsodium')) {
     ) {
         return '';
     }
-    
+
     /**
      * Increment a string in little-endian
-     * 
+     *
      * @param &string $nonce
      */
     function increment(
@@ -787,7 +788,7 @@ if (!\extension_loaded('libsodium')) {
 
     /**
      * Add the right operand to the left
-     * 
+     *
      * @param &string $left
      * @param string $right
      */
@@ -802,7 +803,8 @@ if (!\extension_loaded('libsodium')) {
      * Get the true major version of libsodium
      * @return int
      */
-    function library_version_major() {
+    function library_version_major()
+    {
         return 0;
     }
 
@@ -810,13 +812,14 @@ if (!\extension_loaded('libsodium')) {
      * Get the true minor version of libsodium
      * @return int
      */
-    function library_version_minor() {
+    function library_version_minor()
+    {
         return 0;
     }
-    
+
     /**
      * Compare two strings in constant time
-     * 
+     *
      * @param string $left
      * @param string $right
      * @return int
@@ -830,7 +833,7 @@ if (!\extension_loaded('libsodium')) {
 
     /**
      * Wipe a buffer
-     * 
+     *
      * @param &string $nonce
      */
     function memzero(
@@ -841,16 +844,17 @@ if (!\extension_loaded('libsodium')) {
 
     /**
      * Get the version string
-     * 
+     *
      * @return string
      */
-    function version_string() {
+    function version_string()
+    {
         return 'NA';
     }
 
     /**
      * Scalar multiplication of the base point and your key
-     * 
+     *
      * @param string $sk
      * @return string
      */

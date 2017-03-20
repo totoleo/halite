@@ -1,37 +1,38 @@
 <?php
 namespace ParagonIE\Halite\Contract;
 
+use ParagonIE\Halite\Asymmetric\EncryptionPublicKey;
+use ParagonIE\Halite\Asymmetric\EncryptionSecretKey;
+
 /**
  * An interface fundamental to all cryptography implementations
  */
 interface AsymmetricKeyCryptoInterface
 {
-    
     /**
      * Diffie-Hellman, ECDHE, etc.
-     * 
+     *
      * Get a shared secret from a private key you possess and a public key for
      * the intended message recipient
-     * 
+     *
      * @param KeyInterface $privateKey
      * @param KeyInterface $publicKey
-     * 
+     *
      * @return string
      */
     public static function getSharedSecret(
         KeyInterface $privateKey,
         KeyInterface $publicKey
     );
-    
+
     /**
      * Encrypt a string using asymmetric cryptography
      * Seal then sign
-     * 
-     * @param string $source Plaintext
-     * @param SecretKey $privatekey Our private key
-     * @param PublicKey $publickey Their public key
-     * @param boolean $raw Don't hex encode the output?
-     * 
+     *
+     * @param string       $source Plaintext
+     * @param KeyInterface $privateKey
+     * @param KeyInterface $publicKey
+     * @param boolean      $raw Don't hex encode the output?
      * @return string
      */
     public static function encrypt(
@@ -40,16 +41,15 @@ interface AsymmetricKeyCryptoInterface
         KeyInterface $publicKey,
         $raw = false
     );
-    
+
     /**
      * Decrypt a string using asymmetric cryptography
      * Verify then unseal
-     * 
-     * @param string $source Ciphertext
-     * @param SecretKey $privatekey Our private key
-     * @param PublicKey $publickey Their public key
-     * @param boolean $raw Don't hex decode the input?
-     * 
+     *
+     * @param string       $source Ciphertext
+     * @param KeyInterface $privateKey
+     * @param KeyInterface $publicKey
+     * @param boolean      $raw Don't hex decode the input?
      * @return string
      */
     public static function decrypt(
@@ -58,14 +58,14 @@ interface AsymmetricKeyCryptoInterface
         KeyInterface $publicKey,
         $raw = false
     );
-    
+
     /**
      * Encrypt a message with a target users' public key
-     * 
-     * @param string $source Message to encrypt
-     * @param PublicKey $publicKey
-     * @param boolean $raw Don't hex encode the output?
-     * 
+     *
+     * @param string    $source Message to encrypt
+     * @param KeyInterface $publicKey
+     * @param boolean   $raw Don't hex encode the output?
+     *
      * @return string
      */
     public static function seal(
@@ -73,14 +73,14 @@ interface AsymmetricKeyCryptoInterface
         KeyInterface $publicKey,
         $raw = false
     );
-    
+
     /**
      * Decrypt a sealed message with our private key
-     * 
-     * @param string $source Encrypted message (string or resource for a file)
-     * @param SecretKey $privateKey
-     * @param boolean $raw Don't hex decode the input?
-     * 
+     *
+     * @param string    $source Encrypted message (string or resource for a file)
+     * @param KeyInterface $privateKey
+     * @param boolean   $raw Don't hex decode the input?
+     *
      * @return string
      */
     public static function unseal(
@@ -88,14 +88,14 @@ interface AsymmetricKeyCryptoInterface
         KeyInterface $privateKey,
         $raw = false
     );
-    
+
     /**
      * Sign a message with our private key
-     * 
-     * @param string $message Message to sign
-     * @param SecretKey $privateKey
-     * @param boolean $raw Don't hex encode the output?
-     * 
+     *
+     * @param string    $message Message to sign
+     * @param KeyInterface $privateKey
+     * @param boolean   $raw Don't hex encode the output?
+     *
      * @return string Signature (detached)
      */
     public static function sign(
@@ -103,15 +103,15 @@ interface AsymmetricKeyCryptoInterface
         KeyInterface $privateKey,
         $raw = false
     );
-    
+
     /**
      * Verify a signed message with the correct public key
-     * 
-     * @param string $message Message to verifyn
-     * @param PublicKey $publicKey
-     * @param string $signature
-     * @param boolean $raw Don't hex decode the input?
-     * 
+     *
+     * @param string    $message Message to verifyn
+     * @param KeyInterface $publicKey
+     * @param string    $signature
+     * @param boolean   $raw Don't hex decode the input?
+     *
      * @return boolean
      */
     public static function verify(

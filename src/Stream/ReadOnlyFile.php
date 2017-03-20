@@ -176,7 +176,6 @@ class ReadOnlyFile implements StreamInterface
      * size matches their values when the file was first opened.
      * 
      * @throws CryptoException\FileModified
-     * @return true
      */
     public function toctouTest()
     {

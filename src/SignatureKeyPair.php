@@ -136,64 +136,6 @@ final class SignatureKeyPair extends KeyPair
     }
 
     /**
-     * Derive an encryption key from a password and a salt
-     *
-     * @param string $password
-     * @param string $salt
-     * @param int    $type
-     * @return \ParagonIE\Halite\SignatureKeyPair
-     * @throws CryptoException\InvalidFlags
-     */
-    public static function deriveFromPassword(
-        $password,
-        $salt,
-        $type = self::CRYPTO_SIGN
-    ) {
-        if (Key::doesNotHaveFlag($type, Key::ASYMMETRIC)) {
-            throw new CryptoException\InvalidKey(
-                'An asymmetric key type must be passed to KeyPair::generate()'
-            );
-        }
-        if (Key::hasFlag($type, Key::SIGNATURE)) {
-            $key     = SignatureSecretKey::deriveFromPassword(
-                $password,
-                $salt,
-                Key::CRYPTO_SIGN
-            );
-            $keypair = new SignatureKeyPair($key[0]);
-            return $keypair;
-        }
-        throw new CryptoException\InvalidKey(
-            'You must specify encryption or authentication flags.'
-        );
-    }
-
-    /**
-     * Generate a new keypair
-     *
-     * @param int $type Key flags
-     * @param &string $secret_key - Reference to optional variable to store secret key in
-     * @return KeyPair
-     * @throws CryptoException\InvalidKey
-     */
-    public static function generate($type = Key::CRYPTO_SIGN, &$secret_key = null)
-    {
-        if (Key::doesNotHaveFlag($type, Key::ASYMMETRIC)) {
-            throw new CryptoException\InvalidKey(
-                'An asymmetric key type must be passed to KeyPair::generate()'
-            );
-        }
-        if (Key::hasFlag($type, Key::SIGNATURE)) {
-            $key     = SignatureSecretKey::generate(Key::CRYPTO_SIGN, $secret_key);
-            $keypair = new SignatureKeyPair($key);
-            return $keypair;
-        }
-        throw new CryptoException\InvalidKey(
-            'You must specify encryption or authentication flags.'
-        );
-    }
-
-    /**
      * Get a Key object for the public key
      *
      * @return Key
@@ -211,25 +153,5 @@ final class SignatureKeyPair extends KeyPair
     public function getSecretKey()
     {
         return $this->secret_key;
-    }
-
-    /**
-     * Load a keypair from a file
-     *
-     * @param string $filePath
-     * @param int    $type
-     * @return KeyPair
-     *
-     * @throws CryptoException\InvalidFlags
-     */
-    public static function fromFile(
-        $filePath,
-        $type = Key::CRYPTO_SIGN
-    ) {
-        $keys = SignatureSecretKey::fromFile(
-            $filePath,
-            ($type | Key::ASYMMETRIC | Key::ENCRYPTION)
-        );
-        return new SignatureKeyPair(...$keys);
     }
 }

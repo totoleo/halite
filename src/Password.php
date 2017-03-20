@@ -14,9 +14,9 @@ abstract class Password implements \ParagonIE\Halite\Contract\PasswordInterface
 {
     /**
      * Hash then encrypt a password
-     * 
-     * @param string $password         - The user's password
-     * @param EncryptionKey $secret_key - The master key for all passwords
+     *
+     * @param string                     $password - The user's password
+     * @param KeyInterface|EncryptionKey $secret_key - The master key for all passwords
      * @return string
      * @throws InvalidKey
      * @throws InvalidType
@@ -46,10 +46,10 @@ abstract class Password implements \ParagonIE\Halite\Contract\PasswordInterface
 
     /**
      * Decrypt then verify a password
-     * 
-     * @param string $password          - The user-provided password
-     * @param string $stored            - The encrypted password hash
-     * @param EncryptionKey $secret_key  - The master key for all passwords
+     *
+     * @param string                     $password - The user-provided password
+     * @param string                     $stored - The encrypted password hash
+     * @param KeyInterface|EncryptionKey $secret_key - The master key for all passwords
      * @return bool
      * @throws InvalidKey
      * @throws InvalidType
