@@ -1,9 +1,9 @@
 # Halite
 
-[![Build Status](https://travis-ci.org/paragonie/halite.svg?branch=stable)](https://travis-ci.org/paragonie/halite)
-[![Latest Stable Version](https://poser.pugx.org/paragonie/halite/v/stable)](https://packagist.org/packages/paragonie/halite)
-[![Latest Unstable Version](https://poser.pugx.org/paragonie/halite/v/unstable)](https://packagist.org/packages/paragonie/halite)
-[![License](https://poser.pugx.org/paragonie/halite/license)](https://packagist.org/packages/paragonie/halite)
+[![Build Status](https://travis-ci.org/totoleo/halite.svg?branch=stable)](https://travis-ci.org/totoleo/halite)
+[![Latest Stable Version](https://poser.pugx.org/paragonie/halite/v/stable)](https://packagist.org/packages/guazi/halite)
+[![Latest Unstable Version](https://poser.pugx.org/paragonie/halite/v/unstable)](https://packagist.org/packages/guazi/halite)
+[![License](https://poser.pugx.org/paragonie/halite/license)](https://packagist.org/packages/guazi/halite)
 
 > **Note**: This is the version 1 branch. Please upgrade to a newer version as soon as possible.
 
