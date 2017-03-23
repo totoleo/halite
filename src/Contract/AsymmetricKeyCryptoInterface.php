@@ -1,8 +1,7 @@
 <?php
 namespace ParagonIE\Halite\Contract;
 
-use ParagonIE\Halite\Asymmetric\EncryptionPublicKey;
-use ParagonIE\Halite\Asymmetric\EncryptionSecretKey;
+use ParagonIE\Halite\Halite;
 
 /**
  * An interface fundamental to all cryptography implementations
@@ -62,9 +61,9 @@ interface AsymmetricKeyCryptoInterface
     /**
      * Encrypt a message with a target users' public key
      *
-     * @param string    $source Message to encrypt
+     * @param string       $source Message to encrypt
      * @param KeyInterface $publicKey
-     * @param boolean   $raw Don't hex encode the output?
+     * @param boolean      $raw Don't hex encode the output?
      *
      * @return string
      */
@@ -77,9 +76,9 @@ interface AsymmetricKeyCryptoInterface
     /**
      * Decrypt a sealed message with our private key
      *
-     * @param string    $source Encrypted message (string or resource for a file)
+     * @param string       $source Encrypted message (string or resource for a file)
      * @param KeyInterface $privateKey
-     * @param boolean   $raw Don't hex decode the input?
+     * @param boolean      $raw Don't hex decode the input?
      *
      * @return string
      */
@@ -92,25 +91,25 @@ interface AsymmetricKeyCryptoInterface
     /**
      * Sign a message with our private key
      *
-     * @param string    $message Message to sign
+     * @param string       $message Message to sign
      * @param KeyInterface $privateKey
-     * @param boolean   $raw Don't hex encode the output?
-     *
+     * @param string|bool  $encoding
      * @return string Signature (detached)
+     *
      */
     public static function sign(
         $message,
         KeyInterface $privateKey,
-        $raw = false
+        $encoding = Halite::ENCODE_BASE64URLSAFE
     );
 
     /**
      * Verify a signed message with the correct public key
      *
-     * @param string    $message Message to verifyn
+     * @param string       $message Message to verifyn
      * @param KeyInterface $publicKey
-     * @param string    $signature
-     * @param boolean   $raw Don't hex decode the input?
+     * @param string       $signature
+     * @param string       $encoding
      *
      * @return boolean
      */
@@ -118,6 +117,6 @@ interface AsymmetricKeyCryptoInterface
         $message,
         KeyInterface $publicKey,
         $signature,
-        $raw = false
+        $encoding = Halite::ENCODE_BASE64URLSAFE
     );
 }

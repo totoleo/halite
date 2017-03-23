@@ -1,11 +1,12 @@
 <?php
 namespace ParagonIE\Halite\Asymmetric;
 
-use \ParagonIE\Halite\Alerts as CryptoException;
-use \ParagonIE\Halite\Util as CryptoUtil;
-use \ParagonIE\Halite\Contract;
-use \ParagonIE\Halite\Symmetric\Crypto as SymmetricCrypto;
-use \ParagonIE\Halite\Symmetric\EncryptionKey;
+use ParagonIE\Halite\Alerts as CryptoException;
+use ParagonIE\Halite\Contract;
+use ParagonIE\Halite\Halite;
+use ParagonIE\Halite\Symmetric\Crypto as SymmetricCrypto;
+use ParagonIE\Halite\Symmetric\EncryptionKey;
+use ParagonIE\Halite\Util as CryptoUtil;
 
 abstract class Crypto implements Contract\AsymmetricKeyCryptoInterface
 {
@@ -42,25 +43,25 @@ abstract class Crypto implements Contract\AsymmetricKeyCryptoInterface
                 'Argument 3: Expected an instance of EncryptionPublicKey'
             );
         }
-        $ecdh = new EncryptionKey(
+        $ecdh       = new EncryptionKey(
             self::getSharedSecret($ourPrivateKey, $theirPublicKey)
         );
         $ciphertext = SymmetricCrypto::encrypt($source, $ecdh, $raw);
         unset($ecdh);
         return $ciphertext;
     }
-    
+
     /**
      * Decrypt a string using asymmetric cryptography
      * Wraps SymmetricCrypto::decrypt()
-     * 
-     * @param string $source Ciphertext
+     *
+     * @param string              $source Ciphertext
      * @param EncryptionSecretKey $ourPrivateKey Our private key
      * @param EncryptionPublicKey $theirPublicKey Their public key
-     * @param boolean $raw Don't hex decode the input?
-     * 
+     * @param boolean             $raw Don't hex decode the input?
+     *
      * @return string
-     * 
+     *
      * @throws CryptoException\InvalidKey
      * @throws CryptoException\InvalidType
      */
@@ -85,7 +86,7 @@ abstract class Crypto implements Contract\AsymmetricKeyCryptoInterface
                 'Argument 3: Expected an instance of EncryptionPublicKey'
             );
         }
-        $ecdh = new EncryptionKey(
+        $ecdh       = new EncryptionKey(
             self::getSharedSecret($ourPrivateKey, $theirPublicKey)
         );
         $ciphertext = SymmetricCrypto::decrypt($source, $ecdh, $raw);
@@ -165,7 +166,7 @@ abstract class Crypto implements Contract\AsymmetricKeyCryptoInterface
                 'crypto_box_seal is not available'
             );
         }
-        
+
         $sealed = \Sodium\crypto_box_seal($source, $publicKey->get());
         if ($raw) {
             return $sealed;
@@ -178,7 +179,7 @@ abstract class Crypto implements Contract\AsymmetricKeyCryptoInterface
      *
      * @param string                                   $message Message to sign
      * @param SignatureSecretKey|Contract\KeyInterface $privateKey
-     * @param boolean                                  $raw Don't hex encode the output?
+     * @param string|bool                              $encoding
      * @return string Signature (detached)
      *
      * @throws CryptoException\InvalidKey
@@ -187,7 +188,7 @@ abstract class Crypto implements Contract\AsymmetricKeyCryptoInterface
     public static function sign(
         $message,
         Contract\KeyInterface $privateKey,
-        $raw = false
+        $encoding = Halite::ENCODE_BASE64URLSAFE
     ) {
         if (!\is_string($message)) {
             throw new CryptoException\InvalidType(
@@ -199,14 +200,15 @@ abstract class Crypto implements Contract\AsymmetricKeyCryptoInterface
                 'Argument 2: Expected an instance of SignatureSecretKey'
             );
         }
-        $signed = \Sodium\crypto_sign_detached(
+        $signed  = \Sodium\crypto_sign_detached(
             $message,
             $privateKey->get()
         );
-        if ($raw) {
-            return $signed;
+        $encoder = Halite::chooseEncoder($encoding);
+        if ($encoder) {
+            return $encoder($signed);
         }
-        return \Sodium\bin2hex($signed);
+        return $signed;
     }
 
     /**
@@ -251,11 +253,11 @@ abstract class Crypto implements Contract\AsymmetricKeyCryptoInterface
             $secret_key,
             $public_key
         );
-        
+
         // Wipe these immediately:
         \Sodium\memzero($secret_key);
         \Sodium\memzero($public_key);
-        
+
         // Now let's open that sealed box
         $message = \Sodium\crypto_box_seal_open($source, $kp);
 
@@ -277,7 +279,7 @@ abstract class Crypto implements Contract\AsymmetricKeyCryptoInterface
      * @param string                                   $message Message to verify
      * @param SignaturePublicKey|Contract\KeyInterface $publicKey
      * @param string                                   $signature
-     * @param boolean                                  $raw Don't hex decode the input?
+     * @param string                                   $encoding
      * @return bool
      * @throws CryptoException\InvalidKey
      * @throws CryptoException\InvalidSignature
@@ -287,7 +289,7 @@ abstract class Crypto implements Contract\AsymmetricKeyCryptoInterface
         $message,
         Contract\KeyInterface $publicKey,
         $signature,
-        $raw = false
+        $encoding = Halite::ENCODE_BASE64URLSAFE
     ) {
         if (!\is_string($message)) {
             throw new CryptoException\InvalidType(
@@ -304,15 +306,17 @@ abstract class Crypto implements Contract\AsymmetricKeyCryptoInterface
                 'Argument 3: Expected the signature as a string'
             );
         }
-        if (!$raw) {
-            $signature = \Sodium\hex2bin($signature);
+        $decoder = Halite::chooseEncoder($encoding, true);
+        if ($decoder) {
+            // We were given hex data:
+            $signature = $decoder($signature);
         }
         if (CryptoUtil::safeStrlen($signature) !== \Sodium\CRYPTO_SIGN_BYTES) {
             throw new CryptoException\InvalidSignature(
                 'Signature is not the correct length; is it encoded?'
             );
         }
-        
+
         return \Sodium\crypto_sign_verify_detached(
             $signature,
             $message,

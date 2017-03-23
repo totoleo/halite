@@ -1,9 +1,9 @@
 <?php
-use \ParagonIE\Halite\Asymmetric\Crypto as Asymmetric;
-use \ParagonIE\Halite\Alerts as CryptoException;
-use \ParagonIE\Halite\KeyFactory;
-use \ParagonIE\Halite\Asymmetric\EncryptionPublicKey;
-use \ParagonIE\Halite\Asymmetric\EncryptionSecretKey;
+use ParagonIE\Halite\Alerts as CryptoException;
+use ParagonIE\Halite\Asymmetric\Crypto as Asymmetric;
+use ParagonIE\Halite\Asymmetric\EncryptionPublicKey;
+use ParagonIE\Halite\Asymmetric\EncryptionSecretKey;
+use ParagonIE\Halite\KeyFactory;
 
 /**
  * @backupGlobals disabled
@@ -141,8 +141,6 @@ class AsymmetricTest extends PHPUnit_Framework_TestCase
         
         $message = 'test message';
         $signature = Asymmetric::sign($message, $alice->getSecretKey());
-        
-        $this->assertTrue(strlen($signature) === 128);
         
         $this->assertTrue(
             Asymmetric::verify($message, $alice->getPublicKey(), $signature)
