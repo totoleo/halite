@@ -20,13 +20,13 @@ use ParagonIE\Halite\Alerts\InvalidType;
  */
 abstract class Halite
 {
-    const VERSION             = '1.0.0';
+    const VERSION = '1.0.0';
 
     const HALITE_VERSION_KEYS = "\x31\x40\x01\x00";
 
     const HALITE_VERSION_FILE = "\x31\x41\x01\x00";
 
-    const HALITE_VERSION      = "\x31\x42\x01\x00";
+    const HALITE_VERSION = "\x31\x42\x01\x00";
 
     const VERSION_TAG_LEN = 4;
 
@@ -49,7 +49,7 @@ abstract class Halite
      * @return callable (array or string)
      * @throws InvalidType
      */
-    public static function chooseEncoder($chosen, bool $decode = false)
+    public static function chooseEncoder($chosen, $decode = false)
     {
         if ($chosen === true) {
             return null;
