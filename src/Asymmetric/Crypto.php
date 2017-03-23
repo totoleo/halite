@@ -206,7 +206,7 @@ abstract class Crypto implements Contract\AsymmetricKeyCryptoInterface
         );
         $encoder = Halite::chooseEncoder($encoding);
         if ($encoder) {
-            return $encoder($signed);
+            return call_user_func($encoder, $signed);
         }
         return $signed;
     }
@@ -309,7 +309,7 @@ abstract class Crypto implements Contract\AsymmetricKeyCryptoInterface
         $decoder = Halite::chooseEncoder($encoding, true);
         if ($decoder) {
             // We were given hex data:
-            $signature = $decoder($signature);
+            $signature = call_user_func($decoder, $signature);
         }
         if (CryptoUtil::safeStrlen($signature) !== \Sodium\CRYPTO_SIGN_BYTES) {
             throw new CryptoException\InvalidSignature(
